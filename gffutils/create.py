@@ -70,6 +70,7 @@ class _DBCreator(object):
         pragmas=constants.default_pragmas,
         _keep_tempfiles=False,
         directives=None,
+        merge_by_create_unique_suffix='',
         **kwargs
     ):
         """
@@ -94,6 +95,7 @@ class _DBCreator(object):
         self.force_merge_fields = force_merge_fields
         self.pragmas = pragmas
         self.merge_strategy = merge_strategy
+        self.merge_by_create_unique_suffix = merge_by_create_unique_suffix
         self.default_encoding = default_encoding
         if directives is None:
             directives = []
@@ -160,7 +162,7 @@ class _DBCreator(object):
 
     def _increment_featuretype_autoid(self, key):
         self._autoincrements[key] += 1
-        return "%s_%s" % (key, self._autoincrements[key])
+        return "%s_%s%s" % (key, self.merge_by_create_unique_suffix, self._autoincrements[key])
 
     def _id_handler(self, f):
         """
